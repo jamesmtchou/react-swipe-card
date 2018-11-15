@@ -1,5 +1,5 @@
 import Cards from './Cards'
 
-export Card from './CardSwitcher'
+export {default as Card} from './CardSwitcher'
 
 export default Cards
