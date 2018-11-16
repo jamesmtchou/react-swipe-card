@@ -37,6 +37,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+var SWIPE_PERCENTAGE = 0.5;
+
 var DraggableCard =
 /*#__PURE__*/
 function (_Component) {
@@ -115,17 +117,22 @@ function (_Component) {
       if (!current) return;
 
       var getDirection = function getDirection() {
+        var offsetWidth = current.offsetWidth,
+            offsetHeight = current.offsetHeight;
+        var adjustedWidth = offsetWidth * SWIPE_PERCENTAGE;
+        var adjustedHeight = offsetHeight * SWIPE_PERCENTAGE;
+
         switch (true) {
-          case _this2.state.x < -50:
+          case _this2.state.x + adjustedWidth < 0:
             return 'Left';
 
-          case _this2.state.x + (current.offsetWidth - 50) > screen.x:
+          case _this2.state.x + adjustedWidth > screen.x:
             return 'Right';
 
-          case _this2.state.y < -50:
+          case _this2.state.y + adjustedHeight < 0:
             return 'Top';
 
-          case _this2.state.y + (current.offsetHeight - 50) > screen.y:
+          case _this2.state.y + adjustedHeight > screen.y:
             return 'Bottom';
 
           default:

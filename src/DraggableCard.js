@@ -3,6 +3,8 @@ import Hammer from 'hammerjs'
 import SimpleCard from './SimpleCard'
 import { translate3d } from './utils'
 
+const SWIPE_PERCENTAGE = 0.5;
+
 class DraggableCard extends Component {
   constructor (props) {
     super(props)
@@ -50,11 +52,14 @@ class DraggableCard extends Component {
     if (!current) return;
 
     const getDirection = () => {
+      const { offsetWidth, offsetHeight } = current;
+      const adjustedWidth = offsetWidth * SWIPE_PERCENTAGE;
+      const adjustedHeight = offsetHeight * SWIPE_PERCENTAGE;
       switch (true) {
-        case (this.state.x < -50): return 'Left'
-        case (this.state.x + (current.offsetWidth - 50) > screen.x): return 'Right'
-        case (this.state.y < -50): return 'Top'
-        case (this.state.y + (current.offsetHeight - 50) > screen.y): return 'Bottom'
+        case (this.state.x + adjustedWidth < 0): return 'Left'
+        case (this.state.x + adjustedWidth > screen.x): return 'Right'
+        case (this.state.y + adjustedHeight < 0): return 'Top'
+        case (this.state.y + adjustedHeight > screen.y): return 'Bottom'
         default: return false
       }
     }
