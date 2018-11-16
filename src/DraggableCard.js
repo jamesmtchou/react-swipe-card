@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 import Hammer from 'hammerjs'
-import ReactDOM from 'react-dom'
 import SimpleCard from './SimpleCard'
 import { translate3d } from './utils'
 
@@ -17,14 +16,16 @@ class DraggableCard extends Component {
     }
     this.resetPosition = this.resetPosition.bind(this)
     this.handlePan = this.handlePan.bind(this)
+    this.card = createRef();
   }
   resetPosition () {
     const { x, y } = this.props.containerSize
-    const card = ReactDOM.findDOMNode(this)
+    const { current } = this.card;
+    if (!current) return;
 
     const initialPosition = {
-      x: Math.round((x - card.offsetWidth) / 2),
-      y: Math.round((y - card.offsetHeight) / 2)
+      x: Math.round((x - current.offsetWidth) / 2),
+      y: Math.round((y - current.offsetHeight) / 2)
     }
 
     this.setState({
@@ -45,14 +46,15 @@ class DraggableCard extends Component {
   }
   panend (ev) {
     const screen = this.props.containerSize
-    const card = ReactDOM.findDOMNode(this)
+    const { current } = this.card;
+    if (!current) return;
 
     const getDirection = () => {
       switch (true) {
         case (this.state.x < -50): return 'Left'
-        case (this.state.x + (card.offsetWidth - 50) > screen.x): return 'Right'
+        case (this.state.x + (current.offsetWidth - 50) > screen.x): return 'Right'
         case (this.state.y < -50): return 'Top'
-        case (this.state.y + (card.offsetHeight - 50) > screen.y): return 'Bottom'
+        case (this.state.y + (current.offsetHeight - 50) > screen.y): return 'Bottom'
         default: return false
       }
     }
@@ -92,7 +94,7 @@ class DraggableCard extends Component {
     }
   }
   componentDidMount () {
-    this.hammer = new Hammer.Manager(ReactDOM.findDOMNode(this))
+    this.hammer = new Hammer.Manager(this.card.current)
     this.hammer.add(new Hammer.Pan({ threshold: 2 }))
     
     this.hammer.on('panstart panend pancancel panmove', this.handlePan)
@@ -100,6 +102,13 @@ class DraggableCard extends Component {
 
     this.resetPosition()
     window.addEventListener('resize', this.resetPosition)
+  }
+
+  componentDidUpdate({ containerSize: { x: prevX, y: prevY } }) {
+    const { containerSize: { x, y } } = this.props;
+    if (prevX !== x || prevY !== y) {
+      this.resetPosition();
+    }
   }
   componentWillUnmount () {
     if (this.hammer) {
@@ -112,7 +121,7 @@ class DraggableCard extends Component {
   render () {
     const { x, y, animation, pristine } = this.state
     const style = translate3d(x, y)
-    return <SimpleCard {...this.props} style={style} className={animation ? 'animate' : pristine ? 'inactive' : '' } />
+    return <SimpleCard {...this.props} ref={this.card} style={style} className={animation ? 'animate' : pristine ? 'inactive' : '' } />
   }
 }
 

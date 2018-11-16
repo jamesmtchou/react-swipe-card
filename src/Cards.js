@@ -1,5 +1,4 @@
-import React, { Component, cloneElement } from 'react'
-import ReactDOM from 'react-dom'
+import React, { Component, cloneElement, createRef } from 'react'
 import { DIRECTIONS } from './utils'
 
 class SwipeCards extends Component {
@@ -15,6 +14,7 @@ class SwipeCards extends Component {
     }
     this.removeCard = this.removeCard.bind(this)
     this.setSize = this.setSize.bind(this)
+    this.container = createRef();
   }
   removeCard (side, cardId) {
     const { children, onEnd } = this.props
@@ -37,10 +37,11 @@ class SwipeCards extends Component {
   }
 
   setSize () {
-    const container = ReactDOM.findDOMNode(this)
+    const { current } = this.container;
+    if (!current) return;
     const containerSize = {
-      x: container.offsetWidth,
-      y: container.offsetHeight
+      x: current.offsetWidth,
+      y: current.offsetHeight
     }
     this.setState({ containerSize })
   }
@@ -48,8 +49,6 @@ class SwipeCards extends Component {
   render () {
     const { index, containerSize } = this.state
     const { children, className, onSwipeTop, onSwipeBottom } = this.props
-    if (!containerSize.x || !containerSize.y) return  <div className={className} />
-
     const _cards = children.reduce((memo, c, i) => {
       if (index > i) return memo
       const props = {
@@ -64,7 +63,7 @@ class SwipeCards extends Component {
     }, [])
     
     return (
-      <div className={className}>
+      <div className={className} ref={this.container}>
         {DIRECTIONS.map(d => 
           <div key={d} className={`${this.state[`alert${d}`] ? 'alert-visible': ''} alert-${d.toLowerCase()} alert`}>
             {this.props[`alert${d}`]}

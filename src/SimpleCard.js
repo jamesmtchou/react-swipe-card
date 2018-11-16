@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, forwardRef } from 'react'
 import ReactDOM from 'react-dom'
 import { translate3d } from './utils'
 
@@ -28,7 +28,7 @@ class Card extends Component {
 
   render () {
     const { initialPosition: { x, y } } = this.state
-    const { className = 'inactive' } = this.props
+    const { className = 'inactive', forwardedRef } = this.props
     var style = {
       ...translate3d(x, y),
       zIndex: this.props.index,
@@ -36,11 +36,11 @@ class Card extends Component {
     }
 
     return (
-      <div style={style} className={`card ${className}`}>
+      <div style={style} className={`card ${className}`} ref={forwardedRef} >
         {this.props.children}
       </div>
     )
   }
 }
 
-export default Card
+export default forwardRef((props, ref) => <Card {...props} forwardedRef={ref} />)

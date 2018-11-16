@@ -9,8 +9,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _hammerjs = _interopRequireDefault(require("hammerjs"));
 
-var _reactDom = _interopRequireDefault(require("react-dom"));
-
 var _SimpleCard = _interopRequireDefault(require("./SimpleCard"));
 
 var _utils = require("./utils");
@@ -66,6 +64,7 @@ function (_Component) {
     };
     _this.resetPosition = _this.resetPosition.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handlePan = _this.handlePan.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.card = (0, _react.createRef)();
     return _this;
   }
 
@@ -75,12 +74,11 @@ function (_Component) {
       var _this$props$container = this.props.containerSize,
           x = _this$props$container.x,
           y = _this$props$container.y;
-
-      var card = _reactDom.default.findDOMNode(this);
-
+      var current = this.card.current;
+      if (!current) return;
       var initialPosition = {
-        x: Math.round((x - card.offsetWidth) / 2),
-        y: Math.round((y - card.offsetHeight) / 2)
+        x: Math.round((x - current.offsetWidth) / 2),
+        y: Math.round((y - current.offsetHeight) / 2)
       };
       this.setState({
         x: initialPosition.x,
@@ -113,21 +111,21 @@ function (_Component) {
       var _this2 = this;
 
       var screen = this.props.containerSize;
-
-      var card = _reactDom.default.findDOMNode(this);
+      var current = this.card.current;
+      if (!current) return;
 
       var getDirection = function getDirection() {
         switch (true) {
           case _this2.state.x < -50:
             return 'Left';
 
-          case _this2.state.x + (card.offsetWidth - 50) > screen.x:
+          case _this2.state.x + (current.offsetWidth - 50) > screen.x:
             return 'Right';
 
           case _this2.state.y < -50:
             return 'Top';
 
-          case _this2.state.y + (card.offsetHeight - 50) > screen.y:
+          case _this2.state.y + (current.offsetHeight - 50) > screen.y:
             return 'Bottom';
 
           default:
@@ -183,7 +181,7 @@ function (_Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.hammer = new _hammerjs.default.Manager(_reactDom.default.findDOMNode(this));
+      this.hammer = new _hammerjs.default.Manager(this.card.current);
       this.hammer.add(new _hammerjs.default.Pan({
         threshold: 2
       }));
@@ -191,6 +189,20 @@ function (_Component) {
       this.hammer.on('swipestart swipeend swipecancel swipemove', this.handleSwipe);
       this.resetPosition();
       window.addEventListener('resize', this.resetPosition);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(_ref) {
+      var _ref$containerSize = _ref.containerSize,
+          prevX = _ref$containerSize.x,
+          prevY = _ref$containerSize.y;
+      var _this$props$container2 = this.props.containerSize,
+          x = _this$props$container2.x,
+          y = _this$props$container2.y;
+
+      if (prevX !== x || prevY !== y) {
+        this.resetPosition();
+      }
     }
   }, {
     key: "componentWillUnmount",
@@ -213,6 +225,7 @@ function (_Component) {
           pristine = _this$state2.pristine;
       var style = (0, _utils.translate3d)(x, y);
       return _react.default.createElement(_SimpleCard.default, _extends({}, this.props, {
+        ref: this.card,
         style: style,
         className: animation ? 'animate' : pristine ? 'inactive' : ''
       }));

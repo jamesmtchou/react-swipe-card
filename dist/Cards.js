@@ -7,11 +7,7 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _reactDom = _interopRequireDefault(require("react-dom"));
-
 var _utils = require("./utils");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -69,6 +65,7 @@ function (_Component) {
     };
     _this.removeCard = _this.removeCard.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.setSize = _this.setSize.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.container = (0, _react.createRef)();
     return _this;
   }
 
@@ -102,11 +99,11 @@ function (_Component) {
   }, {
     key: "setSize",
     value: function setSize() {
-      var container = _reactDom.default.findDOMNode(this);
-
+      var current = this.container.current;
+      if (!current) return;
       var containerSize = {
-        x: container.offsetWidth,
-        y: container.offsetHeight
+        x: current.offsetWidth,
+        y: current.offsetHeight
       };
       this.setState({
         containerSize: containerSize
@@ -125,9 +122,6 @@ function (_Component) {
           className = _this$props2.className,
           onSwipeTop = _this$props2.onSwipeTop,
           onSwipeBottom = _this$props2.onSwipeBottom;
-      if (!containerSize.x || !containerSize.y) return _react.default.createElement("div", {
-        className: className
-      });
 
       var _cards = children.reduce(function (memo, c, i) {
         if (index > i) return memo;
@@ -148,7 +142,8 @@ function (_Component) {
       }, []);
 
       return _react.default.createElement("div", {
-        className: className
+        className: className,
+        ref: this.container
       }, _utils.DIRECTIONS.map(function (d) {
         return _react.default.createElement("div", {
           key: d,

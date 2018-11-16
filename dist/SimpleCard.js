@@ -15,6 +15,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -88,8 +90,10 @@ function (_Component) {
       var _this$state$initialPo = this.state.initialPosition,
           x = _this$state$initialPo.x,
           y = _this$state$initialPo.y;
-      var _this$props$className = this.props.className,
-          className = _this$props$className === void 0 ? 'inactive' : _this$props$className;
+      var _this$props = this.props,
+          _this$props$className = _this$props.className,
+          className = _this$props$className === void 0 ? 'inactive' : _this$props$className,
+          forwardedRef = _this$props.forwardedRef;
 
       var style = _objectSpread({}, (0, _utils.translate3d)(x, y), {
         zIndex: this.props.index
@@ -97,7 +101,8 @@ function (_Component) {
 
       return _react.default.createElement("div", {
         style: style,
-        className: "card ".concat(className)
+        className: "card ".concat(className),
+        ref: forwardedRef
       }, this.props.children);
     }
   }]);
@@ -105,5 +110,10 @@ function (_Component) {
   return Card;
 }(_react.Component);
 
-var _default = Card;
+var _default = (0, _react.forwardRef)(function (props, ref) {
+  return _react.default.createElement(Card, _extends({}, props, {
+    forwardedRef: ref
+  }));
+});
+
 exports.default = _default;
