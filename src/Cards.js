@@ -65,11 +65,11 @@ class SwipeCards extends Component {
     return (
       <div className={className} ref={this.container}>
         {DIRECTIONS.map(d => 
-          <div key={d} className={`${this.state[`alert${d}`] ? 'alert-visible': ''} alert-${d.toLowerCase()} alert`}>
+          <div key={d} className={`${this.state[`alert${d}`] ? 'alert-visible': ''} alert-${d.toLowerCase()} react-swipe-card__alert`}>
             {this.props[`alert${d}`]}
           </div>
         )}
-        <div id='cards'>
+        <div id='react-swipe-card__cards'>
           {_cards}
         </div>
       </div>

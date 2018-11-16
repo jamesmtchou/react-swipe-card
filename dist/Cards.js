@@ -147,10 +147,10 @@ function (_Component) {
       }, _utils.DIRECTIONS.map(function (d) {
         return _react.default.createElement("div", {
           key: d,
-          className: "".concat(_this3.state["alert".concat(d)] ? 'alert-visible' : '', " alert-").concat(d.toLowerCase(), " alert")
+          className: "".concat(_this3.state["alert".concat(d)] ? 'alert-visible' : '', " alert-").concat(d.toLowerCase(), " react-swipe-card__alert")
         }, _this3.props["alert".concat(d)]);
       }), _react.default.createElement("div", {
-        id: "cards"
+        id: "react-swipe-card__cards"
       }, _cards));
     }
   }]);

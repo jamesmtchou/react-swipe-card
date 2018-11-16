@@ -36,7 +36,7 @@ class Card extends Component {
     }
 
     return (
-      <div style={style} className={`card ${className}`} ref={forwardedRef} >
+      <div style={style} className={`react-swipe-card__card ${className}`} ref={forwardedRef} >
         {this.props.children}
       </div>
     )

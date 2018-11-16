@@ -36,7 +36,7 @@ h1, h2 {
   border: 1px solid #e5e5e5;
 }
 
-.card {
+.react-swipe-card__card {
   background-color: white;
   background-size: cover;
   position: absolute;
@@ -58,7 +58,7 @@ h1, h2 {
   box-shadow: none;
 }
 
-.alert {
+.react-swipe-card__alert {
   width: 45%;
   min-height: 10%;
   position: absolute;

@@ -101,7 +101,7 @@ function (_Component) {
 
       return _react.default.createElement("div", {
         style: style,
-        className: "card ".concat(className),
+        className: "react-swipe-card__card ".concat(className),
         ref: forwardedRef
       }, this.props.children);
     }
